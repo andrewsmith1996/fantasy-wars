@@ -38,6 +38,7 @@ void showMenu(){
     //Character choice, show character description
     int characterChoice;
     
+    //Validation
     do{
         cout << "Which character do you wish to use?" << endl;
         cout << "1 - Kruse: A deadly Warrior with high strength and impeccable combat skills." << endl;
