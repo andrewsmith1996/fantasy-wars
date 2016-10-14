@@ -10,6 +10,7 @@
 #include "mob.h"
 #include <cstdlib>
 #include <iostream>
+#include <ctime>
 
 using namespace std;
 
@@ -24,11 +25,13 @@ void Mob::reduceHealthPoints(int damageGiven){
 
 //Method for dealing a random amount of damage
 int Mob::getDamage(){
+    srand(time(NULL));
     int damageDealt = (rand() % 10) + 1;
     return damageDealt;
 }
 
 void Mob::placeOnGrid(){
+    srand(time(NULL));
     int row = (rand() % 12) + 1;
     int col = (rand() % 8) + 1;
     
