@@ -32,8 +32,9 @@ int Mob::getDamage(){
 }
 
 void Mob::placeOnGrid(){
- 
-    int row = rand()% 11;
+    
+    //Minus 1 row to allow character spawing not on enemy
+    int row = rand()% 10;
     int col = rand()% 7;
     
     colPos = col;

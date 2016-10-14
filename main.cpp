@@ -121,27 +121,40 @@ void createMobs(string grid[rows][cols]){
 
 }
 
+void placeCharacter(int characterChoice, string grid[rows][cols]){
+    //Generate the correct character symbol
+    
+    string characterSymbol;
+    
+    if(characterChoice == 1){
+        characterSymbol = "K";
+    } else if (characterChoice == 2){
+        characterSymbol = "M";
+    } else{
+        characterSymbol = "F";
+    }
+
+    grid[rows - 1][(cols - 1) / 2] =  " " + characterSymbol + " ";
+    
+
+}
+
 
 void playGame(int characterChoice){
     
     //Set the random numebr seed for a "more random" set of numbers
     srand(time(NULL));
     
-    //Generate the correct character object
-    if(characterChoice == 1){
-        Kruse characterChosen;
-    } else if (characterChoice == 2){
-        cout << "Mysterio";
-    } else{
-        cout << "Ferzo";
-    }
     
     //declare and create the grid
     string grid[rows][cols];
     createGrid(grid);
     
+    //Create mobs
     createMobs(grid);
     
+    //Put character on screen
+    placeCharacter(characterChoice, grid);
     
     //display the grid
     displayGrid(grid);
