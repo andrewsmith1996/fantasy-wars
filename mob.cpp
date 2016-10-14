@@ -14,6 +14,7 @@
 
 using namespace std;
 
+
 int Mob::getHealthPoints(){
     return healthPoints;
 }
@@ -25,18 +26,15 @@ void Mob::reduceHealthPoints(int damageGiven){
 
 //Method for dealing a random amount of damage
 int Mob::getDamage(){
-    srand(time(NULL));
-    int damageDealt = (rand() % 10) + 1;
+   
+    int damageDealt = rand()%10 ;
     return damageDealt;
 }
 
 void Mob::placeOnGrid(){
-    srand(time(NULL));
-    int row = (rand() % 12) + 1;
-    int col = (rand() % 8) + 1;
-    
-    cout << row << endl;
-    cout << col << endl;
+ 
+    int row = rand()% 12;
+    int col = rand()% 8;
     
     colPos = col;
     rowPos = row;

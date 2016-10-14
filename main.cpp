@@ -9,6 +9,7 @@
 #include <iostream>
 #include "kruse.h"
 #include "mob.h"
+#include <vector>
 
 using namespace std;
 
@@ -17,7 +18,7 @@ void showMenu();
 void playGame(int);
 char createGrid(char);
 void displayGrid(char);
-string AddMob();
+string AddMob(string, Mob);
 
 //Global Variables
 const int rows = 12;
@@ -91,14 +92,12 @@ void displayGrid(string grid[rows][cols]){
 
 }
 
-string addMob(string grid[rows][cols]){
-    Mob enemy;
+void addMob(string grid[rows][cols], Mob enemy){
     
     enemy.placeOnGrid();
     
     grid[enemy.rowPos][enemy.colPos] = " 0 ";
     
-    return grid[rows][cols];
     
     
 }
@@ -118,12 +117,23 @@ void playGame(int characterChoice){
     
     string grid[rows][cols];
     createGrid(grid);
-    displayGrid(grid);
-    addMob(grid);
+    
+    Mob mobs[5];
+    srand(time(NULL));
+    cout << mobs[1].colPos << " " << mobs[1].rowPos << endl;
+    cout << mobs[2].colPos << " " << mobs[2].rowPos << endl;
+    cout << mobs[3].colPos << " " << mobs[3].rowPos << endl;
+    cout << mobs[4].colPos << " " << mobs[4].rowPos << endl;
+    cout << mobs[5].colPos << " " << mobs[5].rowPos << endl;
+    
+    for(int x = 0; x < 5; x++){
+        addMob(grid, mobs[x]);
+    }
+   
     displayGrid(grid);
  
     
-    }
+}
 
 
 
