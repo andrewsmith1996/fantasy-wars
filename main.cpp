@@ -8,12 +8,21 @@
 
 #include <iostream>
 #include "kruse.h"
+#include "mob.h"
 
 using namespace std;
 
 //Prototypes
 void showMenu();
-void playGame(Kruse);
+void playGame(int);
+char createGrid(char);
+void displayGrid(char);
+string AddMob();
+
+//Global Variables
+const int rows = 12;
+const int cols = 8;
+
 
 int main(){
     
@@ -49,17 +58,72 @@ void showMenu(){
     } while(characterChoice < 1 || characterChoice > 3);
     
     
-    Kruse characterChosen;
     
-    playGame(characterChosen);
+    playGame(characterChoice);
 
 }
 
+string createGrid(string grid[rows][cols]){
+   
+    
+    for (int row = 0; row < rows; row++)
+        for (int col = 0; col < cols; col++)
+        {
+            grid[row][col] = " - " ;
+            
+        }
+    
+    return grid[rows][cols];
 
-void playGame(Kruse character){
+}
+
+void displayGrid(string grid[rows][cols]){
+    
+    for (int row = 0; row < rows; row++)
+    {
+        for (int col = 0; col < cols; col++)
+        {
+            cout << grid[row][col];
+        }
+        cout << endl;
+        
+    }
+
+}
+
+string addMob(string grid[rows][cols]){
+    Mob enemy;
+    
+    enemy.placeOnGrid();
+    
+    grid[enemy.rowPos][enemy.colPos] = " 0 ";
+    
+    return grid[rows][cols];
+    
+    
+}
+
+
+void playGame(int characterChoice){
+    
+    
+    if(characterChoice == 1){
+        Kruse characterChosen;
+    } else if (characterChoice == 2){
+        cout << "Mysterio";
+    } else{
+        cout << "Ferzo";
+    }
+    
+    
+    string grid[rows][cols];
+    createGrid(grid);
+    displayGrid(grid);
+    addMob(grid);
+    displayGrid(grid);
  
-    cout <<
-}
+    
+    }
 
 
 

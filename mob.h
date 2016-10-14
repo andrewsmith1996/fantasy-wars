@@ -17,7 +17,10 @@ class Mob{
         int getHealthPoints();
         void reduceHealthPoints(int damage);
         int getDamage();
-
+        void placeOnGrid();
+        int colPos;
+        int rowPos;
+    
     
     
     

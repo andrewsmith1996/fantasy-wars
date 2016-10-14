@@ -9,6 +9,9 @@
 #include <stdio.h>
 #include "mob.h"
 #include <cstdlib>
+#include <iostream>
+
+using namespace std;
 
 int Mob::getHealthPoints(){
     return healthPoints;
@@ -23,4 +26,16 @@ void Mob::reduceHealthPoints(int damageGiven){
 int Mob::getDamage(){
     int damageDealt = (rand() % 10) + 1;
     return damageDealt;
+}
+
+void Mob::placeOnGrid(){
+    int row = (rand() % 12) + 1;
+    int col = (rand() % 8) + 1;
+    
+    cout << row << endl;
+    cout << col << endl;
+    
+    colPos = col;
+    rowPos = row;
+    
 }
