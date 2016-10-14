@@ -6,26 +6,37 @@
 //  Copyright © 2016 Andrew Smith. All rights reserved.
 //
 
-#ifndef kruse_h
-#define kruse_h
+#ifndef character_h
+#define character_h
 
 #include <string>
 
 using namespace std;
 
-//Class for the Kruse character
+//Class for the  character
 
-class Kruse{
+class Character{
     private:
         int healthPoints = 100;
         string name = "Kruse";
         string weapon = "Sword";
+        int rowPos;
+        int colPos;
     public:
         int getHealthPoints();
         void reduceHealthPoints(int damage);
         int getDamage();
         string getName();
+        void setRowPos(int number);
+        void setColPos(int number);
     
+        int getRowPos(){
+            return rowPos;
+        }
+    
+        int getColPos(){
+            return colPos;
+        }
 };
 
 

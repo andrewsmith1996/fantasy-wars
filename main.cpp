@@ -7,7 +7,7 @@
 //
 
 #include <iostream>
-#include "kruse.h"
+#include "character.h"
 #include "mob.h"
 #include <vector>
 
@@ -15,11 +15,13 @@ using namespace std;
 
 //Prototypes
 void showMenu();
-void playGame(int);
-char createGrid(char);
-void displayGrid(char);
+void playGame();
+char createGrid(string);
+void displayGrid(string);
 string AddMob(string, Mob);
 void createMobs(string);
+void placeCharacter(string, Character);
+void moveCharacter(string, Character, string);
 
 //Global Variables
 const int rows = 12;
@@ -47,22 +49,8 @@ void showMenu(){
         cin >> playChoice;
     } while (playChoice != 1);
     
-    //Character choice, show character description
-    int characterChoice;
     
-    //Validation
-    do{
-        cout << "Which character do you wish to use?" << endl;
-        cout << "1 - Kruse: A deadly Warrior with high strength and impeccable combat skills." << endl;
-        cout << "2 - Mysterio: A powerful Mage who can cast mysterious spells." << endl;
-        cout << "3 - Ferzo: A silent Archer who can be deadly from range." << endl;
-        
-        cin >> characterChoice;
-    } while(characterChoice < 1 || characterChoice > 3);
-    
-    
-    
-    playGame(characterChoice);
+    playGame();
 
 }
 
@@ -121,30 +109,44 @@ void createMobs(string grid[rows][cols]){
 
 }
 
-void placeCharacter(int characterChoice, string grid[rows][cols]){
+void placeCharacter(string grid[rows][cols], Character& player){
     //Generate the correct character symbol
+   
+    player.setRowPos(rows - 1);
+    player.setColPos((cols - 1) / 2);
     
-    string characterSymbol;
-    
-    if(characterChoice == 1){
-        characterSymbol = "K";
-    } else if (characterChoice == 2){
-        characterSymbol = "M";
-    } else{
-        characterSymbol = "F";
-    }
-
-    grid[rows - 1][(cols - 1) / 2] =  " " + characterSymbol + " ";
+    grid[player.getRowPos()][player.getColPos()] = " K ";
     
 
 }
 
+void moveCharacter(string movement, Character& player, string grid[rows][cols]){
+    
+    //Reset the board
+    grid[player.getRowPos()][player.getColPos()] = " - ";
+    
+    if(movement == "L"){
+        player.setColPos(player.getColPos() - 1);
+    } else if(movement == "R"){
+        player.setColPos(player.getColPos() + 1);
+    } else{
+         player.setRowPos(player.getRowPos() - 1);
+    }
 
-void playGame(int characterChoice){
+    
+    grid[player.getRowPos()][player.getColPos()] = " K ";
+
+
+    
+}
+
+
+
+
+void playGame(){
     
     //Set the random numebr seed for a "more random" set of numbers
     srand(time(NULL));
-    
     
     //declare and create the grid
     string grid[rows][cols];
@@ -153,11 +155,32 @@ void playGame(int characterChoice){
     //Create mobs
     createMobs(grid);
     
+    //Create character
+    Character player;
+    
     //Put character on screen
-    placeCharacter(characterChoice, grid);
+    placeCharacter(grid, player);
     
     //display the grid
     displayGrid(grid);
+    
+    //Start actual gameplay
+    bool characterAlive = true;
+    
+    string movement;
+    bool check = false;
+    
+   // while(characterAlive == true){
+        
+                cout << "Move Left (L), Forward (F), Right (R)" << endl;
+                cin >> movement;
+        
+        
+        //Do the actual movement
+        moveCharacter(movement, player, grid);
+       displayGrid(grid);
+        
+   // }
  
     
 }
