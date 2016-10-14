@@ -19,10 +19,12 @@ void playGame(int);
 char createGrid(char);
 void displayGrid(char);
 string AddMob(string, Mob);
+void createMobs(string);
 
 //Global Variables
 const int rows = 12;
 const int cols = 8;
+const int numberOfMobs = 8;
 
 
 int main(){
@@ -80,6 +82,7 @@ string createGrid(string grid[rows][cols]){
 
 void displayGrid(string grid[rows][cols]){
     
+    //Function that displays the grid row by row
     for (int row = 0; row < rows; row++)
     {
         for (int col = 0; col < cols; col++)
@@ -94,18 +97,37 @@ void displayGrid(string grid[rows][cols]){
 
 void addMob(string grid[rows][cols], Mob enemy){
     
+    //Sets the enemy to a random point on the grid
     enemy.placeOnGrid();
     
-    grid[enemy.rowPos][enemy.colPos] = " 0 ";
+    //Actually places the enemy
+    //If an enemy already occupies the space then recursively replaces it
+    if(grid[enemy.rowPos][enemy.colPos] == " - "){
+        grid[enemy.rowPos][enemy.colPos] = " 0 ";
+    } else{
+        addMob(grid, enemy);
+    }
     
+}
+
+void createMobs(string grid[rows][cols]){
+    //Set the list of Mobs and create the Mobs in the game
+    Mob mobs[numberOfMobs];
     
-    
+    //Actually add the mobs to the grid
+    for(int x = 0; x < numberOfMobs; x++){
+        addMob(grid, mobs[x]);
+    }
+
 }
 
 
 void playGame(int characterChoice){
     
+    //Set the random numebr seed for a "more random" set of numbers
+    srand(time(NULL));
     
+    //Generate the correct character object
     if(characterChoice == 1){
         Kruse characterChosen;
     } else if (characterChoice == 2){
@@ -114,22 +136,14 @@ void playGame(int characterChoice){
         cout << "Ferzo";
     }
     
-    
+    //declare and create the grid
     string grid[rows][cols];
     createGrid(grid);
     
-    Mob mobs[5];
-    srand(time(NULL));
-    cout << mobs[1].colPos << " " << mobs[1].rowPos << endl;
-    cout << mobs[2].colPos << " " << mobs[2].rowPos << endl;
-    cout << mobs[3].colPos << " " << mobs[3].rowPos << endl;
-    cout << mobs[4].colPos << " " << mobs[4].rowPos << endl;
-    cout << mobs[5].colPos << " " << mobs[5].rowPos << endl;
+    createMobs(grid);
     
-    for(int x = 0; x < 5; x++){
-        addMob(grid, mobs[x]);
-    }
-   
+    
+    //display the grid
     displayGrid(grid);
  
     

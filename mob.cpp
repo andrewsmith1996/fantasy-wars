@@ -33,8 +33,8 @@ int Mob::getDamage(){
 
 void Mob::placeOnGrid(){
  
-    int row = rand()% 12;
-    int col = rand()% 8;
+    int row = rand()% 11;
+    int col = rand()% 7;
     
     colPos = col;
     rowPos = row;
