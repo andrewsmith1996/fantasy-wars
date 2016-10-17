@@ -21,7 +21,8 @@ void displayGrid(string);
 string AddMob(string, Mob);
 void createMobs(string);
 void placeCharacter(string, Character);
-bool moveCharacter(string, Character, string);
+void moveCharacter(string, Character, string);
+bool checkMove(string, Character, string);
 
 //Global Variables
 const int rows = 12;
@@ -120,52 +121,64 @@ void placeCharacter(string grid[rows][cols], Character& player){
 
 }
 
-bool moveCharacter(string movement, Character& player, string grid[rows][cols]){
-    
+bool checkMove(string movement, Character& player, string grid[rows][cols]){
     bool validMove = true;
     
     if(movement == "L"){
         int boundry = player.getColPos() - 1;
         if(boundry < 0){
             validMove = false;
-            break;
         } else{
             //Reset the board
             grid[player.getRowPos()][player.getColPos()] = " - ";
             player.setColPos(boundry);
             grid[player.getRowPos()][player.getColPos()] = " K ";
-
+            
         }
     } else if(movement == "R"){
         int boundry = player.getColPos() + 1;
         if(boundry > 7){
             validMove = false;
-            break;
         } else{
             //Reset the board
             grid[player.getRowPos()][player.getColPos()] = " - ";
             player.setColPos(boundry);
             grid[player.getRowPos()][player.getColPos()] = " K ";
-
+            
         }
     } else{
         int boundry = player.getRowPos() - 1;
         if(boundry < 1){
             validMove = false;
-            break;
         } else{
             //Reset the board
             grid[player.getRowPos()][player.getColPos()] = " - ";
-            player.setRow(boundry);
+            player.setRowPos(boundry);
             grid[player.getRowPos()][player.getColPos()] = " K ";
-
+            
         }
         
     }
-
+    
     
     return validMove;
+    
 
+}
+
+void moveCharacter(string movement, Character& player, string grid[rows][cols]){
+    
+    //Reset the board
+    grid[player.getRowPos()][player.getColPos()] = " - ";
+
+    if(movement == "L"){
+            grid[player.getRowPos()][player.getColPos()] = " K ";
+    } else if(movement == "R"){
+            grid[player.getRowPos()][player.getColPos()] = " K ";
+    } else{
+            grid[player.getRowPos()][player.getColPos()] = " K ";
+
+    }
     
 }
 
@@ -198,22 +211,28 @@ void playGame(){
     
     string movement;
     bool check = false;
+    bool validMove;
     
     while(characterAlive == true){
         
-                cout << "Move Left (L), Forward (F), Right (R)" << endl;
-                cin >> movement;
+        do{
+            cout << "Move Left (L), Forward (F), Right (R)" << endl;
+            cin >> movement;
+            
+            validMove = checkMove(movement, player, grid);
+            
+            if(validMove == false){
+                cout << "Invalid Move" << endl;
+            } else{
+                //Do the actual movement
+                moveCharacter(movement, player, grid);
+                displayGrid(grid);
+            }
+            
         
-        bool validMove = checkMove(movement, player, grid);
+        } while(validMove == true);
         
-
         
-        //Do the actual movement
-        moveCharacter(movement, player, grid);
-        if(validMove == false){
-            cout << "Invalid Move";
-        }
-        displayGrid(grid);
         
     }
  
