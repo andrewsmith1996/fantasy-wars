@@ -23,7 +23,7 @@ void createMobs(string);
 void placeCharacter(string, Character);
 void moveCharacter(string, Character, string);
 bool checkMove(string, Character, string);
-void checkEnemet(string, Character, string);
+bool checkEnemey(string, Character, string);
 
 //Global Variables
 const int rows = 12;
@@ -168,15 +168,23 @@ void moveCharacter(string movement, Character& player, string grid[rows][cols]){
     
 }
 
-void checkEnemy(string movement, Character player, string grid[rows][cols]){
-    /*if(movement == "L"){
-        if(grid[player.getRowPos()][player.getColPos()] = " K "){
-            
-        }
-       }
-
+bool checkEnemy(string movement, Character player, string grid[rows][cols]){
+    bool enemy = false;
     
-    */
+    if(movement == "L"){
+        if(grid[player.getRowPos()][player.getColPos() - 1] == " 0 "){
+            enemy = true;
+        }
+    } else if(movement == "R"){
+        if(grid[player.getRowPos()][player.getColPos() + 1] == " 0 "){
+            enemy = true;
+        }
+    } else if(grid[player.getRowPos() - 1][player.getColPos()] == " 0 "){
+        enemy = true;
+    }
+    
+    return enemy;
+    
     
 }
 
@@ -209,6 +217,7 @@ void playGame(){
     string movement;
     bool check = false;
     bool validMove;
+    bool enemy;
     
     while(characterAlive == true){
         
@@ -218,8 +227,10 @@ void playGame(){
             
             validMove = checkMove(movement, player, grid);
             
-            //checkEnemy(movement, player, grid);
-            
+            enemy = checkEnemy(movement, player, grid);
+            if(enemy == true){
+                cout << "enemy!";
+            }
             if(validMove == false){
                 cout << "Invalid Move" << endl;
             } else{
