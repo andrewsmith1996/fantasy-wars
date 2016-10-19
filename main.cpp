@@ -24,6 +24,7 @@ void placeCharacter(string, Character);
 void moveCharacter(string, Character, string);
 bool checkMove(string, Character, string);
 bool checkEnemey(string, Character, string);
+bool battle(Character, string);
 
 //Global Variables
 const int rows = 12;
@@ -185,7 +186,16 @@ bool checkEnemy(string movement, Character player, string grid[rows][cols]){
     
     return enemy;
     
+}
+
+bool battle(Character player, string grid[rows][cols]){
+    bool battleWon;
     
+    battleWon = true;
+    
+    
+    return battleWon;
+
 }
 
 
@@ -217,7 +227,7 @@ void playGame(){
     string movement;
     bool check = false;
     bool validMove;
-    bool enemy;
+    bool enemyCheck;
     
     while(characterAlive == true){
         
@@ -227,15 +237,26 @@ void playGame(){
             
             validMove = checkMove(movement, player, grid);
             
-            enemy = checkEnemy(movement, player, grid);
-            if(enemy == true){
-                cout << "enemy!";
-            }
+            
             if(validMove == false){
                 cout << "Invalid Move" << endl;
             } else{
-                //Do the actual movement
+                
+                
+                enemyCheck = checkEnemy(movement, player, grid);
+                
+                //Check for enemy
+                if(enemyCheck == true){
+                    bool battleWon = battle(player, grid);
+                    if(battleWon == true){
+                        //Do the actual movement
+                        } else{
+                        cout << "you lose";
+                    }
+                }
+                
                 moveCharacter(movement, player, grid);
+               
                 displayGrid(grid);
                 
             }
