@@ -136,6 +136,7 @@ void placeCharacter(string grid[rows][cols], Character& player){
 }
 
 bool checkMove(string movement, Character& player, string grid[rows][cols]){
+ 
     bool validMove = true;
     
     if(movement == "L"){
@@ -148,13 +149,18 @@ bool checkMove(string movement, Character& player, string grid[rows][cols]){
         if(boundry > 7){
             validMove = false;
         }
-    } else{
+    } else if(movement == "B"){
+        int boundry = player.getRowPos() + 1;
+        if(boundry > 11){
+            validMove = false;
+        }
+    } else if(movement == "F"){
         int boundry = player.getRowPos() - 1;
         if(boundry < 0){
             validMove = false;
         }
         
-    }
+}
     
     
     return validMove;
@@ -173,7 +179,10 @@ void moveCharacter(string movement, Character& player, string grid[rows][cols]){
     } else if(movement == "R"){
             grid[player.getRowPos()][player.getColPos() + 1] = " K ";
             player.setColPos(player.getColPos() + 1);
-    } else{
+    } else if(movement == "B"){
+            grid[player.getRowPos() + 1][player.getColPos()] = " K ";
+            player.setRowPos(player.getRowPos() + 1);
+    } else if(movement == "F"){
             grid[player.getRowPos() - 1][player.getColPos()] = " K ";
             player.setRowPos(player.getRowPos() - 1);
 
@@ -192,10 +201,16 @@ bool checkEnemy(string movement, Character player, string grid[rows][cols]){
         if(grid[player.getRowPos()][player.getColPos() + 1] == " 0 "){
             enemy = true;
         }
-    } else if(grid[player.getRowPos() - 1][player.getColPos()] == " 0 "){
-        enemy = true;
+    } else if(movement == "F"){
+        if(grid[player.getRowPos() - 1][player.getColPos()] == " 0 "){
+            enemy = true;
+        }
+    } else if(movement == "B"){
+        if(grid[player.getRowPos() + 1][player.getColPos()] == " 0 "){
+            enemy = true;
+        }
     }
-    
+        
     return enemy;
     
 }
@@ -229,7 +244,7 @@ string chooseWeapon(){
     return weapon;
 }
 
-void dealDamageToMob(int damage, int percent, string weapon, Mob){
+void dealDamageToMob(int damage, int percent, string weapon){
     
     int randomNumber = rand() % 100;
     
@@ -241,10 +256,6 @@ void dealDamageToMob(int damage, int percent, string weapon, Mob){
         } else{
             cout << "You successfully stab the Goblin!" << endl;
         }
-        
-        
-        
-        
     } else{
         if(weapon == "Sword"){
             cout << "You swing your sword but the Goblin dodges it!" << endl;
@@ -314,7 +325,7 @@ void playGame(){
     while(characterAlive == true){
         
         do{
-            cout << "Move Left (L), Forward (F), Right (R)" << endl;
+            cout << "Move Left (L), Forward (F), Backward (B), Right (R)" << endl;
             cin >> movement;
             
             validMove = checkMove(movement, player, grid);
