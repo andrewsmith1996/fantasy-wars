@@ -25,6 +25,7 @@ void moveCharacter(string, Character, string);
 bool checkMove(string, Character, string);
 bool checkEnemey(string, Character, string);
 bool battle(Character, string);
+string chooseWeapon();
 
 //Global Variables
 const int rows = 12;
@@ -188,10 +189,42 @@ bool checkEnemy(string movement, Character player, string grid[rows][cols]){
     
 }
 
+string chooseWeapon(){
+    cout << "Please Choose your Weapon" << endl;
+    cout << "1 - Dagger. Chance: 20% Damage: 40 HP" << endl;
+    cout << "2 - Bow. Chance: 35% Damage: 30 HP" << endl;
+    cout << "3 - Sword. Chance: 80% Damage: 20 HP" << endl;
+    
+    int choice;
+    string weapon;
+    
+    cin >> choice;
+    
+    switch(choice){
+        case 1:
+            weapon = "Dagger";
+            break;
+        case 2:
+            weapon = "Bow";
+            break;
+        case 3:
+            weapon = "Sword";
+            break;
+        default:
+            cout << "Error choosing Weapon, please restart Fantasy Wars" << endl;
+    }
+    
+    return weapon;
+}
+
 bool battle(Character player, string grid[rows][cols]){
     bool battleWon;
     
     battleWon = true;
+    
+    string weapon = chooseWeapon();
+    
+    cout << weapon;
     
     
     return battleWon;
@@ -249,7 +282,7 @@ void playGame(){
                 if(enemyCheck == true){
                     bool battleWon = battle(player, grid);
                     if(battleWon == true){
-                        //Do the actual movement
+                        
                         } else{
                         cout << "you lose";
                     }

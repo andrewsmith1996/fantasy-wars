@@ -21,9 +21,9 @@ class Mob{
         int colPos;
         int rowPos;
     
+
     
-    
-    
+
     
     
 };
