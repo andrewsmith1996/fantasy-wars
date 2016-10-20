@@ -15,7 +15,7 @@ class Mob{
         int healthPoints = 100;
     public:
         int getHealthPoints();
-        void reduceHealthPoints(int damage);
+        void setHealthPoints(int damage);
         int getDamage();
         void placeOnGrid();
         int colPos;

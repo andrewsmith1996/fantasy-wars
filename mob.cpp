@@ -20,7 +20,7 @@ int Mob::getHealthPoints(){
 }
 
 //Method for reducing the health points based on how much damage has been given to a character
-void Mob::reduceHealthPoints(int damageGiven){
+void Mob::setHealthPoints(int damageGiven){
     healthPoints -= damageGiven;
 }
 

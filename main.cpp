@@ -26,11 +26,22 @@ bool checkMove(string, Character, string);
 bool checkEnemey(string, Character, string);
 bool battle(Character, string);
 string chooseWeapon();
+void dealDamageToMob(int, int, string);
 
 //Global Variables
 const int rows = 12;
 const int cols = 8;
 const int numberOfMobs = 8;
+
+const int daggerDamage = 40;
+const int daggerPercent = 20;
+
+const int bowDamage = 30;
+const int bowPercent = 30;
+
+const int swordDamage = 20;
+const int swordPercent = 50;
+
 
 
 int main(){
@@ -191,9 +202,10 @@ bool checkEnemy(string movement, Character player, string grid[rows][cols]){
 
 string chooseWeapon(){
     cout << "Please Choose your Weapon" << endl;
-    cout << "1 - Dagger. Chance: 20% Damage: 40 HP" << endl;
-    cout << "2 - Bow. Chance: 35% Damage: 30 HP" << endl;
-    cout << "3 - Sword. Chance: 80% Damage: 20 HP" << endl;
+    cout << "1 - Dagger. Chance: " << daggerPercent << "% Damage: " << daggerDamage << " HP" << endl;
+    cout << "2 - Bow. Chance: " << bowPercent << "% Damage: " << bowDamage << " HP" << endl;
+    cout << "3 - Sword. Chance: " << swordPercent << "% Damage: " << swordDamage << " HP" << endl;
+
     
     int choice;
     string weapon;
@@ -217,6 +229,36 @@ string chooseWeapon(){
     return weapon;
 }
 
+void dealDamageToMob(int damage, int percent, string weapon, Mob){
+    
+    int randomNumber = rand() % 100;
+    
+    if(randomNumber <= percent){
+        if(weapon == "Sword"){
+            cout << "You swing your sword and successfully strike the Goblin!" << endl;
+        } else if(weapon == "Bow"){
+            cout << "You fire an arrow at the Goblin and successfully hit it!" << endl;
+        } else{
+            cout << "You successfully stab the Goblin!" << endl;
+        }
+        
+        
+        
+        
+    } else{
+        if(weapon == "Sword"){
+            cout << "You swing your sword but the Goblin dodges it!" << endl;
+        } else if(weapon == "Bow"){
+            cout << "You fire an arrow but miss!" << endl;
+        } else{
+            cout << "The Goblin avoids your dagger!" << endl;
+        }
+    }
+    
+    
+    
+}
+
 bool battle(Character player, string grid[rows][cols]){
     bool battleWon;
     
@@ -224,7 +266,14 @@ bool battle(Character player, string grid[rows][cols]){
     
     string weapon = chooseWeapon();
     
-    cout << weapon;
+    if(weapon == "Dagger"){
+        dealDamageToMob(daggerDamage, daggerPercent, weapon);
+    } else if(weapon == "Bow"){
+        dealDamageToMob(bowDamage, bowPercent, weapon);
+    } else{
+        dealDamageToMob(swordDamage, swordPercent, weapon);
+    }
+    
     
     
     return battleWon;
