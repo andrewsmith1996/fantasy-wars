@@ -71,7 +71,7 @@ void showMenu(){
 
 string createGrid(string grid[rows][cols]){
    
-    
+    //Loop to create the initial grid
     for (int row = 0; row < rows; row++)
         for (int col = 0; col < cols; col++)
         {
@@ -79,6 +79,7 @@ string createGrid(string grid[rows][cols]){
             
         }
     
+    //Return the 2D array
     return grid[rows][cols];
 
 }
@@ -90,8 +91,10 @@ void displayGrid(string grid[rows][cols]){
     {
         for (int col = 0; col < cols; col++)
         {
+            //output the rows
             cout << grid[row][col];
         }
+        //output a new line
         cout << endl;
         
     }
@@ -115,11 +118,12 @@ void addMob(string grid[rows][cols], Mob enemy){
 
 
 void placeCharacter(string grid[rows][cols], Character& player){
-    //Generate the correct character symbol
    
+    //Place the player on the grid
     player.setRowPos(rows - 1);
     player.setColPos((cols - 1) / 2);
     
+    //Place the symbol of the player
     grid[player.getRowPos()][player.getColPos()] = " K ";
     
 
@@ -129,6 +133,7 @@ bool checkMove(string movement, Character& player, string grid[rows][cols]){
  
     bool validMove = true;
     
+    //Checks the movement and sees if the movement would be out of the grid
     if(movement == "L"){
         int boundry = player.getColPos() - 1;
         if(boundry < 0){
@@ -163,6 +168,7 @@ void moveCharacter(string movement, Character& player, string grid[rows][cols]){
     //Reset the board
     grid[player.getRowPos()][player.getColPos()] = " - ";
 
+    //Checks the movement and then sets the new space for the character
     if(movement == "L"){
             grid[player.getRowPos()][player.getColPos() - 1] = " K ";
             player.setColPos(player.getColPos() - 1);
@@ -183,6 +189,7 @@ void moveCharacter(string movement, Character& player, string grid[rows][cols]){
 bool checkEnemy(string movement, Character player, string grid[rows][cols]){
     bool enemy = false;
     
+    //Checks the movement and if the new movement position is an enemy or not
     if(movement == "L"){
         if(grid[player.getRowPos()][player.getColPos() - 1] == " 0 "){
             enemy = true;
@@ -206,17 +213,20 @@ bool checkEnemy(string movement, Character player, string grid[rows][cols]){
 }
 
 string chooseWeapon(){
+    
+    //Menu for choosing the weapon
     cout << "Please Choose your Weapon" << endl;
     cout << "1 - Dagger. Chance: " << daggerPercent << "% Damage: " << daggerDamage << " HP" << endl;
     cout << "2 - Bow. Chance: " << bowPercent << "% Damage: " << bowDamage << " HP" << endl;
     cout << "3 - Sword. Chance: " << swordPercent << "% Damage: " << swordDamage << " HP" << endl;
 
-    
+    //Input the weapon choice
     int choice;
     string weapon;
     
     cin >> choice;
     
+    //Convert choice to the string version
     switch(choice){
         case 1:
             weapon = "Dagger";
@@ -236,8 +246,10 @@ string chooseWeapon(){
 
 void dealDamageToMob(int damage, int percent, string weapon, Mob mob){
     
+    //Gets a random numebr between 0 and 100
     int randomNumber = rand() % 100;
     
+    //If the percentage of hit probability is less than the random number then a hit has been successful
     if(randomNumber <= percent){
         if(weapon == "Sword"){
             cout << "You swing your sword and successfully strike the Goblin!" << endl;
@@ -247,11 +259,12 @@ void dealDamageToMob(int damage, int percent, string weapon, Mob mob){
             cout << "You successfully stab the Goblin!" << endl;
         }
         
+        //reduce the health of the mob being attacked
         mob.setHealthPoints(damage);
-        cout << "Mob Health: " << mob.getHealthPoints() << endl;
         
         
     } else{
+        //Else if they miss the Mob
         if(weapon == "Sword"){
             cout << "You swing your sword but the Goblin dodges it!" << endl;
         } else if(weapon == "Bow"){
@@ -262,26 +275,34 @@ void dealDamageToMob(int damage, int percent, string weapon, Mob mob){
     }
     
     
-    
 }
 
 bool battle(Character player, string grid[rows][cols], Mob mob){
     bool battleWon;
     
-    battleWon = true;
+    battleWon = false;
     
-    string weapon = chooseWeapon();
-    
-    
-    if(weapon == "Dagger"){
-        dealDamageToMob(daggerDamage, daggerPercent, weapon, mob);
-    } else if(weapon == "Bow"){
-        dealDamageToMob(bowDamage, bowPercent, weapon, mob);
-    } else{
-        dealDamageToMob(swordDamage, swordPercent, weapon, mob);
+    //while the mob is still alive the battle continues
+    while(mob.getHealthPoints() != 0){
+        
+        //output the HP points of the mob being attacked
+        cout << "Mob Health: " << mob.getHealthPoints() << endl;
+        
+        //Choose the weapon to use
+        string weapon = chooseWeapon();
+        
+        //deal damage to the mob
+        if(weapon == "Dagger"){
+            dealDamageToMob(daggerDamage, daggerPercent, weapon, mob);
+        } else if(weapon == "Bow"){
+            dealDamageToMob(bowDamage, bowPercent, weapon, mob);
+        } else{
+            dealDamageToMob(swordDamage, swordPercent, weapon, mob);
+        }
+        
     }
     
-    
+
     
     return battleWon;
 
@@ -289,19 +310,19 @@ bool battle(Character player, string grid[rows][cols], Mob mob){
 
 Mob checkMob(Mob mobs[numberOfMobs], string grid[rows][cols], Character player){
     
+    //gets the current position on the grid of the player
     int row = player.getRowPos();
     int col = player.getColPos();
     
     Mob mob;
     
+    //check to see which Mob is being attacked
     for(int x = 0; x < numberOfMobs; x++){
         if(mobs[x].getRowPos() == row && mobs[x].getColPos() == col){
             mob = mobs[x];
         }
     }
-    
-    cout << "Mob Health: " << mob.getHealthPoints() << endl;
-    
+
     
     return mob;
 }
@@ -350,6 +371,10 @@ void playGame(){
             cout << "Move Left (L), Forward (F), Backward (B), Right (R)" << endl;
             cin >> movement;
             
+            //Convert to uppercase
+            transform(movement.begin(), movement.end(), movement.begin(), ::toupper);
+            
+            //Check to see if move is valid
             validMove = checkMove(movement, player, grid);
             
             
@@ -357,16 +382,19 @@ void playGame(){
                 cout << "Invalid Move" << endl;
             } else{
                 
-                
+                //Check to see if there's an enemy in the new grid position
                 enemyCheck = checkEnemy(movement, player, grid);
                 
                 
                 //Check for enemy
                 if(enemyCheck == true){
                     
+                    //find which mob it is being attacked
                     Mob whichMob = checkMob(mobs, grid, player);
                     
+                    //do actual battling
                     bool battleWon = battle(player, grid, whichMob);
+                    
                     if(battleWon == true){
                         
                         } else{
