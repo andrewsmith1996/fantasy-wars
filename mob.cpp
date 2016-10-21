@@ -15,9 +15,9 @@
 using namespace std;
 
 
-int Mob::getHealthPoints(){
-    return healthPoints;
-}
+
+
+
 
 //Method for reducing the health points based on how much damage has been given to a character
 void Mob::setHealthPoints(int damageGiven){
@@ -34,8 +34,8 @@ int Mob::getDamage(){
 void Mob::placeOnGrid(){
     
     //Minus 1 row to allow character spawing not on enemy
-    int row = rand()% 10;
-    int col = rand()% 7;
+    int row = rand() % 10;
+    int col = rand() % 7;
     
     colPos = col;
     rowPos = row;

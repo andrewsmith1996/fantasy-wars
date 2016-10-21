@@ -104,12 +104,16 @@ void displayGrid(string grid[rows][cols]){
 void addMob(string grid[rows][cols], Mob enemy){
     
     //Sets the enemy to a random point on the grid
+    
     enemy.placeOnGrid();
+    enemy.setInitialHealth();
     
     //Actually places the enemy
     //If an enemy already occupies the space then recursively replaces it
     if(grid[enemy.getRowPos()][enemy.getColPos()] == " - "){
         grid[enemy.getRowPos()][enemy.getColPos()] = " 0 ";
+        
+        
     } else{
         addMob(grid, enemy);
     }
@@ -252,11 +256,11 @@ void dealDamageToMob(int damage, int percent, string weapon, Mob mob){
     //If the percentage of hit probability is less than the random number then a hit has been successful
     if(randomNumber <= percent){
         if(weapon == "Sword"){
-            cout << "You swing your sword and successfully strike the Goblin!" << endl;
+            cout << "You swing your sword and successfully strike the Goblin!" << endl << endl;
         } else if(weapon == "Bow"){
-            cout << "You fire an arrow at the Goblin and successfully hit it!" << endl;
+            cout << "You fire an arrow at the Goblin and successfully hit it!" << endl << endl;
         } else{
-            cout << "You successfully stab the Goblin!" << endl;
+            cout << "You successfully stab the Goblin!" << endl << endl;
         }
         
         //reduce the health of the mob being attacked
@@ -266,11 +270,11 @@ void dealDamageToMob(int damage, int percent, string weapon, Mob mob){
     } else{
         //Else if they miss the Mob
         if(weapon == "Sword"){
-            cout << "You swing your sword but the Goblin dodges it!" << endl;
+            cout << "You swing your sword but the Goblin dodges it!" << endl << endl;
         } else if(weapon == "Bow"){
-            cout << "You fire an arrow but miss!" << endl;
+            cout << "You fire an arrow but miss!" << endl << endl;
         } else{
-            cout << "The Goblin avoids your dagger!" << endl;
+            cout << "The Goblin avoids your dagger!" << endl << endl;
         }
     }
     
@@ -322,6 +326,8 @@ Mob checkMob(Mob mobs[numberOfMobs], string grid[rows][cols], Character player){
             mob = mobs[x];
         }
     }
+    
+    cout << "Mob Pos" << mob.getRowPos() << " " << mob.getColPos() << endl;
 
     
     return mob;
@@ -368,7 +374,7 @@ void playGame(){
     while(characterAlive == true){
         
         do{
-            cout << "Move Left (L), Forward (F), Backward (B), Right (R)" << endl;
+            cout << "Move Left (L), Forward (F), Backward (B), Right (R)" << endl << endl;;
             cin >> movement;
             
             //Convert to uppercase

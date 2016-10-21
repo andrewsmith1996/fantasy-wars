@@ -12,11 +12,19 @@
 class Mob{
     
     private:
-        int healthPoints = 100;
+        int healthPoints;
         int colPos;
         int rowPos;
     public:
-        int getHealthPoints();
+    
+        int getHealthPoints(){
+            return healthPoints;
+        }
+    
+        void setInitialHealth(){
+            healthPoints = 100;
+        }
+    
         void setHealthPoints(int damage);
         int getDamage();
         void placeOnGrid();
@@ -31,6 +39,8 @@ class Mob{
         int getColPos(){
             return colPos;
         }
+    
+    
 
 
     
