@@ -13,14 +13,25 @@ class Mob{
     
     private:
         int healthPoints = 100;
+        int colPos;
+        int rowPos;
     public:
         int getHealthPoints();
         void setHealthPoints(int damage);
         int getDamage();
         void placeOnGrid();
-        int colPos;
-        int rowPos;
+        void setRowPos(int number);
+        void setColPos(int number);
+
     
+        int getRowPos(){
+            return rowPos;
+        }
+    
+        int getColPos(){
+            return colPos;
+        }
+
 
     
 

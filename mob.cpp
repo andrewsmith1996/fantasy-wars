@@ -41,3 +41,11 @@ void Mob::placeOnGrid(){
     rowPos = row;
     
 }
+
+void Mob::setRowPos(int pos){
+    rowPos = pos;
+}
+
+void Mob::setColPos(int pos){
+    colPos = pos;
+}

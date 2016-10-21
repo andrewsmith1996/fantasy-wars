@@ -19,14 +19,14 @@ void playGame();
 char createGrid(string);
 void displayGrid(string);
 string AddMob(string, Mob);
-void createMobs(string);
 void placeCharacter(string, Character);
 void moveCharacter(string, Character, string);
 bool checkMove(string, Character, string);
 bool checkEnemey(string, Character, string);
-bool battle(Character, string);
+bool battle(Character, string, Mob);
 string chooseWeapon();
-void dealDamageToMob(int, int, string);
+void dealDamageToMob(int, int, string, Mob);
+Mob checkMob(Mob, string, Character);
 
 //Global Variables
 const int rows = 12;
@@ -105,24 +105,14 @@ void addMob(string grid[rows][cols], Mob enemy){
     
     //Actually places the enemy
     //If an enemy already occupies the space then recursively replaces it
-    if(grid[enemy.rowPos][enemy.colPos] == " - "){
-        grid[enemy.rowPos][enemy.colPos] = " 0 ";
+    if(grid[enemy.getRowPos()][enemy.getColPos()] == " - "){
+        grid[enemy.getRowPos()][enemy.getColPos()] = " 0 ";
     } else{
         addMob(grid, enemy);
     }
     
 }
 
-void createMobs(string grid[rows][cols]){
-    //Set the list of Mobs and create the Mobs in the game
-    Mob mobs[numberOfMobs];
-    
-    //Actually add the mobs to the grid
-    for(int x = 0; x < numberOfMobs; x++){
-        addMob(grid, mobs[x]);
-    }
-
-}
 
 void placeCharacter(string grid[rows][cols], Character& player){
     //Generate the correct character symbol
@@ -244,7 +234,7 @@ string chooseWeapon(){
     return weapon;
 }
 
-void dealDamageToMob(int damage, int percent, string weapon){
+void dealDamageToMob(int damage, int percent, string weapon, Mob mob){
     
     int randomNumber = rand() % 100;
     
@@ -256,6 +246,11 @@ void dealDamageToMob(int damage, int percent, string weapon){
         } else{
             cout << "You successfully stab the Goblin!" << endl;
         }
+        
+        mob.setHealthPoints(damage);
+        cout << "Mob Health: " << mob.getHealthPoints() << endl;
+        
+        
     } else{
         if(weapon == "Sword"){
             cout << "You swing your sword but the Goblin dodges it!" << endl;
@@ -270,25 +265,45 @@ void dealDamageToMob(int damage, int percent, string weapon){
     
 }
 
-bool battle(Character player, string grid[rows][cols]){
+bool battle(Character player, string grid[rows][cols], Mob mob){
     bool battleWon;
     
     battleWon = true;
     
     string weapon = chooseWeapon();
     
+    
     if(weapon == "Dagger"){
-        dealDamageToMob(daggerDamage, daggerPercent, weapon);
+        dealDamageToMob(daggerDamage, daggerPercent, weapon, mob);
     } else if(weapon == "Bow"){
-        dealDamageToMob(bowDamage, bowPercent, weapon);
+        dealDamageToMob(bowDamage, bowPercent, weapon, mob);
     } else{
-        dealDamageToMob(swordDamage, swordPercent, weapon);
+        dealDamageToMob(swordDamage, swordPercent, weapon, mob);
     }
     
     
     
     return battleWon;
 
+}
+
+Mob checkMob(Mob mobs[numberOfMobs], string grid[rows][cols], Character player){
+    
+    int row = player.getRowPos();
+    int col = player.getColPos();
+    
+    Mob mob;
+    
+    for(int x = 0; x < numberOfMobs; x++){
+        if(mobs[x].getRowPos() == row && mobs[x].getColPos() == col){
+            mob = mobs[x];
+        }
+    }
+    
+    cout << "Mob Health: " << mob.getHealthPoints() << endl;
+    
+    
+    return mob;
 }
 
 
@@ -303,7 +318,14 @@ void playGame(){
     createGrid(grid);
     
     //Create mobs
-    createMobs(grid);
+    //Set the list of Mobs and create the Mobs in the game
+    Mob mobs[numberOfMobs];
+    
+    //Actually add the mobs to the grid
+    for(int x = 0; x < numberOfMobs; x++){
+        addMob(grid, mobs[x]);
+    }
+    
     
     //Create character
     Character player;
@@ -338,9 +360,13 @@ void playGame(){
                 
                 enemyCheck = checkEnemy(movement, player, grid);
                 
+                
                 //Check for enemy
                 if(enemyCheck == true){
-                    bool battleWon = battle(player, grid);
+                    
+                    Mob whichMob = checkMob(mobs, grid, player);
+                    
+                    bool battleWon = battle(player, grid, whichMob);
                     if(battleWon == true){
                         
                         } else{
