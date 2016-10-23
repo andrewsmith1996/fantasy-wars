@@ -101,7 +101,7 @@ void displayGrid(string grid[rows][cols]){
 
 }
 
-void addMob(string grid[rows][cols], Mob enemy){
+void addMob(string grid[rows][cols], Mob& enemy){
     
     //Sets the enemy to a random point on the grid
     
@@ -112,7 +112,6 @@ void addMob(string grid[rows][cols], Mob enemy){
     //If an enemy already occupies the space then recursively replaces it
     if(grid[enemy.getRowPos()][enemy.getColPos()] == " - "){
         grid[enemy.getRowPos()][enemy.getColPos()] = " 0 ";
-        
         
     } else{
         addMob(grid, enemy);
@@ -281,7 +280,7 @@ void dealDamageToMob(int damage, int percent, string weapon, Mob mob){
     
 }
 
-bool battle(Character player, string grid[rows][cols], Mob mob){
+bool battle(Character player, string grid[rows][cols], Mob& mob){
     bool battleWon;
     
     battleWon = false;
@@ -312,25 +311,29 @@ bool battle(Character player, string grid[rows][cols], Mob mob){
 
 }
 
-Mob checkMob(Mob mobs[numberOfMobs], string grid[rows][cols], Character player){
+Mob checkMob(Mob (&mobs)[numberOfMobs], string grid[rows][cols], Character& player){
     
     //gets the current position on the grid of the player
     int row = player.getRowPos();
     int col = player.getColPos();
     
-    Mob mob;
+    int check;
+    
     
     //check to see which Mob is being attacked
     for(int x = 0; x < numberOfMobs; x++){
         if(mobs[x].getRowPos() == row && mobs[x].getColPos() == col){
-            mob = mobs[x];
+            check = x;
+        } else{
+            check = 0;
         }
     }
     
-    cout << "Mob Pos" << mob.getRowPos() << " " << mob.getColPos() << endl;
+    
+    cout << "Mob Pos" << mobs[check].getRowPos() << " " << mobs[check].getColPos() << endl;
 
     
-    return mob;
+    return mobs[check];
 }
 
 
@@ -352,6 +355,8 @@ void playGame(){
     for(int x = 0; x < numberOfMobs; x++){
         addMob(grid, mobs[x]);
     }
+    
+    
     
     
     //Create character
@@ -397,6 +402,7 @@ void playGame(){
                     
                     //find which mob it is being attacked
                     Mob whichMob = checkMob(mobs, grid, player);
+                    
                     
                     //do actual battling
                     bool battleWon = battle(player, grid, whichMob);
