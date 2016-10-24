@@ -11,6 +11,10 @@
 #include "mob.h"
 #include <vector>
 #include <fstream>
+#include <ctype.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <typeinfo>
 
 using namespace std;
 
@@ -143,30 +147,35 @@ void placeCharacter(string grid[rows][cols], Character& player){
 bool checkMove(string movement, Character& player, string grid[rows][cols]){
  
     bool validMove = true;
-    
-    //Checks the movement and sees if the movement would be out of the grid
-    if(movement == "L"){
-        int boundry = player.getColPos() - 1;
-        if(boundry < 0){
-            validMove = false;
-        }
-    } else if(movement == "R"){
-        int boundry = player.getColPos() + 1;
-        if(boundry > 7){
-            validMove = false;
-        }
-    } else if(movement == "B"){
-        int boundry = player.getRowPos() + 1;
-        if(boundry > 11){
-            validMove = false;
-        }
-    } else if(movement == "F"){
-        int boundry = player.getRowPos() - 1;
-        if(boundry < 0){
-            validMove = false;
-        }
+  
+    if(movement == "L" || movement == "R" || movement == "F" || movement == "B"){
         
-}
+    
+        //Checks the movement and sees if the movement would be out of the grid
+        if(movement == "L"){
+            int boundry = player.getColPos() - 1;
+            if(boundry < 0){
+                validMove = false;
+            }
+        } else if(movement == "R"){
+            int boundry = player.getColPos() + 1;
+            if(boundry > 7){
+                validMove = false;
+            }
+        } else if(movement == "B"){
+            int boundry = player.getRowPos() + 1;
+            if(boundry > 11){
+                validMove = false;
+            }
+        } else if(movement == "F"){
+            int boundry = player.getRowPos() - 1;
+            if(boundry < 0){
+                validMove = false;
+            }
+        }
+    } else{
+        validMove = false;
+    }
     
     
     return validMove;
@@ -551,7 +560,9 @@ void playGame(){
                         mobsLeft--;
                     } else{
                         cout << "GAME OVER! You have died!" << endl;
+                        cout << "You killed " << numberOfMobs - mobsLeft << " Goblins" << endl;
                         characterAlive = false;
+                        break;
                     }
                 }
                 
