@@ -34,9 +34,9 @@ void dealDamageToMob(int, int, string, Mob&);
 Mob checkMob(Mob, string, Character, string);
 
 //Global Variables
-const int rows = 12;
-const int cols = 8;
-const int numberOfMobs = 8;
+const int rows = 20;
+const int cols = 14;
+const int numberOfMobs = 12;
 
 int daggerDamage = 40;
 int daggerPercent = 30;
@@ -46,8 +46,6 @@ int bowPercent = 50;
 
 int swordDamage = 20;
 int swordPercent = 70;
-
-
 
 int main(){
     
@@ -90,8 +88,8 @@ string createGrid(string grid[rows][cols]){
 }
 
 void displayGrid(string grid[rows][cols]){
-    cout << "        THE REALM        " << endl;
-    cout << " ________________________" << endl;
+    cout << "                 THE REALM                 " << endl;
+    cout << " __________________________________________" << endl;
 
     //Function that displays the grid row by row
     for (int row = 0; row < rows; row++)
@@ -108,7 +106,8 @@ void displayGrid(string grid[rows][cols]){
         
     }
 
-    cout << " ------------------------" << endl;
+    cout << " __________________________________________" << endl;
+
 
     
 }
@@ -159,12 +158,12 @@ bool checkMove(string movement, Character& player, string grid[rows][cols]){
             }
         } else if(movement == "R"){
             int boundry = player.getColPos() + 1;
-            if(boundry > 7){
+            if(boundry > (cols - 1)){
                 validMove = false;
             }
         } else if(movement == "B"){
             int boundry = player.getRowPos() + 1;
-            if(boundry > 11){
+            if(boundry > (rows - 1)){
                 validMove = false;
             }
         } else if(movement == "F"){
@@ -327,11 +326,18 @@ bool battle(Character& player, string grid[rows][cols], Mob& mob){
                 break;
         }
         
+        //Gets the damage from the Mob attack
+        int mobAttackDamage = mob.getDamage();
         
-        int randomNumber = mob.getDamage();
-        //Mob attacks the player with a random 0 to 15 damage rate
-        cout << "The Goblin attacks you and hits you!\n" << endl;
-        player.reduceHealthPoints(randomNumber);
+        //If there was no damage
+        if(mobAttackDamage == 0){
+            cout << "The Goblin attacks you but you manage to dodge it's attempts!" << endl;
+        } else{
+            //Mob attacks the player with a random 0 to 15 damage rate
+            cout << "The Goblin attacks you and hits you!\n" << endl;
+            player.reduceHealthPoints(mobAttackDamage);
+
+        }
         
         //Check to see if the player has died
         if(player.getHealthPoints() <= 0){
@@ -465,17 +471,29 @@ void potionAction(string grid[rows][cols], Character& player, string movement){
 
     } else if(potion == 2){
         //If a damage potion
-        cout << "You have found a Damage potion, your damage rate has been increased by 20!" << endl;
-        bowDamage += 20;
-        daggerDamage += 20;
-        swordDamage += 20;
+        //Damage has a max level of 75
+        if(bowDamage <= 75){
+           cout << "You have found a Damage potion, your damage rate has been increased by 20!" << endl;
+            bowDamage += 20;
+            daggerDamage += 20;
+            swordDamage += 20;
+        } else{
+            potionAction(grid, player, movement);
+        }
 
+      
     } else{
         //If a chance potion
-        cout << "You have found a Chance potion, your chace rate has been increased by 15!" << endl;
-        bowPercent += 15;
-        daggerPercent += 15;
-        swordPercent += 15;
+       
+        //Percent has a max of 85
+        if(bowPercent <= 85){
+             cout << "You have found a Chance potion, your chace rate has been increased by 15!" << endl;
+            bowPercent += 15;
+            daggerPercent += 15;
+            swordPercent += 15;
+        } else{
+            potionAction(grid, player, movement);
+        }
     }
 
 }
@@ -515,7 +533,7 @@ void playGame(){
     bool characterAlive = true, check = false, validMove, enemyCheck, potionCheck;
     
     string movement, potionType;
-    int mobsLeft = 8;
+    int mobsLeft = numberOfMobs, moves = 0;
     
     while(characterAlive == true){
         
@@ -538,8 +556,10 @@ void playGame(){
                 //Check to see if there's an enemy in the new grid position
                 enemyCheck = checkEnemy(movement, player, grid);
                 
+                //Check if a potion is in the position the character wants to move into
                 potionCheck = checkPotion(movement, player, grid);
                 
+                //If there IS a potion in the space occupied by the character
                 if(potionCheck == true){
                     potionAction(grid, player, movement);
                 }
@@ -554,7 +574,7 @@ void playGame(){
                     //do actual battling
                     bool battleWon = battle(player, grid, whichMob);
                     
-                    
+                    //Battling check
                     if(battleWon == true){
                         cout << "You kill the Goblin!" << endl;
                         mobsLeft--;
@@ -570,13 +590,32 @@ void playGame(){
                 if(mobsLeft < 7){
                     //Randomly chooses if a potion is to be made available
                     int chanceOfPotion = rand() % 100 + 1;
-                    if(chanceOfPotion <= 30){
-                        placePotion(grid);
+                    
+                    //The chances of a potion appearing on the grid decreases as the player makes more moves
+                    if(moves <= 10){
+                        if(chanceOfPotion <= 40){
+                            placePotion(grid);
+                        }
+                    } else if(moves > 10 && moves <= 20){
+                        if(chanceOfPotion <= 20){
+                            placePotion(grid);
+                        }
+                    } else if(moves > 20 && moves <= 30){
+                        if(chanceOfPotion <= 15){
+                            placePotion(grid);
+                        }
+                    } else{
+                        if(chanceOfPotion <= 10){
+                            placePotion(grid);
+                        }
                     }
+                    
                 }
                 
+                //Move the character and increment the move counter
                 moveCharacter(movement, player, grid);
-               
+                moves++;
+                
                 displayGrid(grid);
                 
                 saveGame(grid);

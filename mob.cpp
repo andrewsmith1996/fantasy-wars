@@ -26,16 +26,30 @@ void Mob::setHealthPoints(int damageGiven){
 
 //Method for dealing a random amount of damage
 int Mob::getDamage(){
-   
-    int damageDealt =  (rand() % 10) + 1;
+    
+    int doesDamage = (rand() % 2) + 1;
+    int damageDealt;
+    
+    switch(doesDamage){
+        case 1:
+             damageDealt = (rand() % 20) + 1;
+            break;
+        case 2:
+            damageDealt = 0;
+            break;
+        default:
+            damageDealt = 0;
+            cout << "Error - Please Restart Fantasy Wars" << endl;
+    }
+    
     return damageDealt;
 }
 
 void Mob::placeOnGrid(){
     
     //Minus 1 row to allow character spawing not on enemy
-    int row = rand() % 10;
-    int col = rand() % 7;
+    int row = rand() % 19;
+    int col = rand() % 13;
     
     colPos = col;
     rowPos = row;
