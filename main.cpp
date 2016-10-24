@@ -367,10 +367,13 @@ Mob checkMob(Mob (&mobs)[numberOfMobs], string grid[rows][cols], Character& play
 
 void saveGame(string grid[rows][cols]){
     
+    //Open the file stream
     ofstream saveFile;
     
+    //Create the text file
     saveFile.open("Fantasy Wars - Saved Game.txt", ios::out);
     
+    //Write the grid to the text file
     for(int row = 0; row < rows; row++){
         for(int col = 0; col < cols; col++){
             saveFile << grid[row][col] << "";
@@ -384,17 +387,16 @@ void saveGame(string grid[rows][cols]){
 
 void placePotion(string grid[rows][cols]){
     
+    //Create a random row
     int randRow = rand() % rows;
     int randCol = rand() % cols;
     
-    int whichPotion = rand() % 2;
-    string potionSymbol = " ? ";
-    
-    
+    //Checks if the randomly chosen space is available
     if(grid[randRow][randCol] == " - "){
-        grid[randRow][randCol] = potionSymbol;
+        grid[randRow][randCol] = " ? ";
         cout << "\nA Magical Potion has appeared!" << endl;
     } else{
+        //If the space isn't free then recall the function recursively
         placePotion(grid);
     }
 
@@ -444,29 +446,28 @@ void potionAction(string grid[rows][cols], Character& player, string movement){
         row += 1;
     }
     
+    //Randomly choose the potion
     int potion = rand() % 3 + 1;
     
     if(potion == 1){
+        //If a health potion
         cout << "You have found a Health potion, your health has been increased by 20!" << endl;
         player.increaseHealth();
 
     } else if(potion == 2){
+        //If a damage potion
         cout << "You have found a Damage potion, your damage rate has been increased by 20!" << endl;
         bowDamage += 20;
         daggerDamage += 20;
         swordDamage += 20;
 
     } else{
+        //If a chance potion
         cout << "You have found a Chance potion, your chace rate has been increased by 15!" << endl;
         bowPercent += 15;
         daggerPercent += 15;
         swordPercent += 15;
     }
-    
-
-
-    
-
 
 }
 
@@ -554,13 +555,14 @@ void playGame(){
                     }
                 }
                 
+                //If the player has killed more than 2 enemies then potions become available
                 if(mobsLeft < 7){
+                    //Randomly chooses if a potion is to be made available
                     int chanceOfPotion = rand() % 100 + 1;
                     if(chanceOfPotion <= 30){
                         placePotion(grid);
                     }
                 }
-                
                 
                 moveCharacter(movement, player, grid);
                
