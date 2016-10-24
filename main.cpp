@@ -25,8 +25,8 @@ bool checkMove(string, Character, string);
 bool checkEnemey(string, Character, string);
 bool battle(Character, string, Mob);
 string chooseWeapon();
-void dealDamageToMob(int, int, string, Mob);
-Mob checkMob(Mob, string, Character);
+void dealDamageToMob(int, int, string, Mob&);
+Mob checkMob(Mob, string, Character, string);
 
 //Global Variables
 const int rows = 12;
@@ -247,7 +247,7 @@ string chooseWeapon(){
     return weapon;
 }
 
-void dealDamageToMob(int damage, int percent, string weapon, Mob mob){
+void dealDamageToMob(int damage, int percent, string weapon, Mob& mob){
     
     //Gets a random numebr between 0 and 100
     int randomNumber = rand() % 100;
@@ -286,10 +286,11 @@ bool battle(Character player, string grid[rows][cols], Mob& mob){
     battleWon = false;
     
     //while the mob is still alive the battle continues
-    while(mob.getHealthPoints() != 0){
+    while(mob.getHealthPoints() > 0 || player.getHealthPoints() > 0){
         
         //output the HP points of the mob being attacked
         cout << "Mob Health: " << mob.getHealthPoints() << endl;
+        cout << "Your Health: " << player.getHealthPoints() << endl;
         
         //Choose the weapon to use
         string weapon = chooseWeapon();
@@ -303,35 +304,50 @@ bool battle(Character player, string grid[rows][cols], Mob& mob){
             dealDamageToMob(swordDamage, swordPercent, weapon, mob);
         }
         
+        if(mob.getHealthPoints() <= 0){
+            //output the HP points of the mob being attacked
+            cout << "Mob Health: " << mob.getHealthPoints() << endl;
+            cout << "Your Health: " << player.getHealthPoints() << endl;
+            break;
+        }
+        
+        int randomNumber = rand() % 15;
+        
+        //Mob attacks the player with a random 0 to 15 damage rate
+        cout << "The Goblin attacks you and hits you!" << endl;
+        player.reduceHealthPoints(randomNumber);
+        
+        
     }
-    
-
     
     return battleWon;
 
 }
 
-Mob checkMob(Mob (&mobs)[numberOfMobs], string grid[rows][cols], Character& player){
+Mob checkMob(Mob (&mobs)[numberOfMobs], string grid[rows][cols], Character& player, string movement){
     
     //gets the current position on the grid of the player
     int row = player.getRowPos();
     int col = player.getColPos();
     
-    int check;
+    int check = 0;
     
+    if(movement == "L"){
+        col -= 1;
+    } else if(movement == "R"){
+        col += 1;
+    } else if(movement == "F"){
+        row -= 1;
+    } else{
+        row += 1;
+    }
     
     //check to see which Mob is being attacked
     for(int x = 0; x < numberOfMobs; x++){
         if(mobs[x].getRowPos() == row && mobs[x].getColPos() == col){
             check = x;
-        } else{
-            check = 0;
         }
     }
-    
-    
-    cout << "Mob Pos" << mobs[check].getRowPos() << " " << mobs[check].getColPos() << endl;
-
     
     return mobs[check];
 }
@@ -355,8 +371,6 @@ void playGame(){
     for(int x = 0; x < numberOfMobs; x++){
         addMob(grid, mobs[x]);
     }
-    
-    
     
     
     //Create character
@@ -401,16 +415,15 @@ void playGame(){
                 if(enemyCheck == true){
                     
                     //find which mob it is being attacked
-                    Mob whichMob = checkMob(mobs, grid, player);
-                    
+                    Mob whichMob = checkMob(mobs, grid, player, movement);
                     
                     //do actual battling
                     bool battleWon = battle(player, grid, whichMob);
                     
                     if(battleWon == true){
-                        
+                        cout << "Goblins Attack" << endl;
                         } else{
-                        cout << "you lose";
+                        cout << "you lose" << endl;
                     }
                 }
                 
