@@ -17,7 +17,7 @@ using namespace std;
 
 class Character{
     private:
-        int healthPoints = 100;
+        int healthPoints;
         string name = "Kruse";
         string weapon = "Sword";
         int rowPos;
@@ -36,6 +36,10 @@ class Character{
     
         int getColPos(){
             return colPos;
+        }
+    
+        void setInitialHealth(){
+            healthPoints = 100;
         }
 };
 

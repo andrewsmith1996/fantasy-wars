@@ -308,11 +308,11 @@ bool battle(Character player, string grid[rows][cols], Mob& mob){
             //output the HP points of the mob being attacked
             cout << "Mob Health: " << mob.getHealthPoints() << endl;
             cout << "Your Health: " << player.getHealthPoints() << endl;
+            battleWon = true;
             break;
         }
         
-        int randomNumber = rand() % 15;
-        
+        int randomNumber = mob.getDamage();
         //Mob attacks the player with a random 0 to 15 damage rate
         cout << "The Goblin attacks you and hits you!" << endl;
         player.reduceHealthPoints(randomNumber);
@@ -376,6 +376,8 @@ void playGame(){
     //Create character
     Character player;
     
+    player.setInitialHealth();
+    
     //Put character on screen
     placeCharacter(grid, player);
     
@@ -410,7 +412,6 @@ void playGame(){
                 //Check to see if there's an enemy in the new grid position
                 enemyCheck = checkEnemy(movement, player, grid);
                 
-                
                 //Check for enemy
                 if(enemyCheck == true){
                     
@@ -421,9 +422,10 @@ void playGame(){
                     bool battleWon = battle(player, grid, whichMob);
                     
                     if(battleWon == true){
-                        cout << "Goblins Attack" << endl;
-                        } else{
-                        cout << "you lose" << endl;
+                        cout << "You kill the Goblin!" << endl;
+                    } else{
+                        cout << "GAME OVER! You have died!" << endl;
+                        characterAlive = false;
                     }
                 }
                 
