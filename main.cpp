@@ -280,7 +280,7 @@ void dealDamageToMob(int damage, int percent, string weapon, Mob& mob){
     
 }
 
-bool battle(Character player, string grid[rows][cols], Mob& mob){
+bool battle(Character& player, string grid[rows][cols], Mob& mob){
     bool battleWon;
     
     battleWon = false;
@@ -307,7 +307,7 @@ bool battle(Character player, string grid[rows][cols], Mob& mob){
         if(mob.getHealthPoints() <= 0){
             //output the HP points of the mob being attacked
             cout << "Mob Health: " << mob.getHealthPoints() << endl;
-            cout << "Your Health: " << player.getHealthPoints() << endl;
+            cout << "Your Health: " << player.getHealthPoints() << endl << endl;
             battleWon = true;
             break;
         }

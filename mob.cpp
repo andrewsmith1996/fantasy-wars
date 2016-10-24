@@ -27,7 +27,7 @@ void Mob::setHealthPoints(int damageGiven){
 //Method for dealing a random amount of damage
 int Mob::getDamage(){
    
-    int damageDealt = rand()%10 ;
+    int damageDealt = rand() % 10;
     return damageDealt;
 }
 
