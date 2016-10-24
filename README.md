@@ -1,5 +1,5 @@
 # Fantasy-Wars
 
-A small turn based fantasy game I'm developing in C++
+A small turn based console fantasy game I'm developing in C++
 
 
