@@ -41,6 +41,10 @@ class Character{
         void setInitialHealth(){
             healthPoints = 100;
         }
+    
+        void increaseHealth(){
+            healthPoints += 30;
+        }
 };
 
 

@@ -34,14 +34,14 @@ const int rows = 12;
 const int cols = 8;
 const int numberOfMobs = 8;
 
-const int daggerDamage = 40;
-const int daggerPercent = 30;
+int daggerDamage = 40;
+int daggerPercent = 30;
 
-const int bowDamage = 30;
-const int bowPercent = 50;
+int bowDamage = 30;
+int bowPercent = 50;
 
-const int swordDamage = 20;
-const int swordPercent = 70;
+int swordDamage = 20;
+int swordPercent = 70;
 
 
 
@@ -388,32 +388,85 @@ void placePotion(string grid[rows][cols]){
     int randCol = rand() % cols;
     
     int whichPotion = rand() % 2;
-    string potionSymbol;
+    string potionSymbol = " ? ";
     
-    switch(whichPotion){
-        case 0:
-            //Health Potion
-            potionSymbol = " ! ";
-            break;
-        case 1:
-            //Damage Potion
-            potionSymbol = " ? ";
-            break;
-        case 2:
-            //Percent Potion
-            potionSymbol = " * ";
-            break;
-        default:
-            potionSymbol = "ERROR";
-            cout << "Error selecting Potion - Please restart Fantasy Wars";
-    }
-  
+    
     if(grid[randRow][randCol] == " - "){
         grid[randRow][randCol] = potionSymbol;
         cout << "\nA Magical Potion has appeared!" << endl;
     } else{
         placePotion(grid);
     }
+
+}
+
+
+bool checkPotion(string movement, Character player, string grid[rows][cols]){
+    bool potion = false;
+    
+    //Checks the movement and if the new movement position is an enemy or not
+    if(movement == "L"){
+        if(grid[player.getRowPos()][player.getColPos() - 1] == " ? "){
+            potion = true;
+        }
+    } else if(movement == "R"){
+        if(grid[player.getRowPos()][player.getColPos() + 1] == " ? "){
+            potion = true;
+        }
+    } else if(movement == "F"){
+        if(grid[player.getRowPos() - 1][player.getColPos()] == " ? "){
+            potion = true;
+        }
+    } else if(movement == "B"){
+        if(grid[player.getRowPos() + 1][player.getColPos()] == " ? "){
+            potion = true;
+        }
+    }
+    
+    return potion;
+    
+}
+
+void potionAction(string grid[rows][cols], Character& player, string movement){
+    
+    //gets the current position on the grid of the player
+    int row = player.getRowPos();
+    int col = player.getColPos();
+    
+    //Add 1 onto coordinates as the player hasn't actually occupied this spot yet
+    if(movement == "L"){
+        col -= 1;
+    } else if(movement == "R"){
+        col += 1;
+    } else if(movement == "F"){
+        row -= 1;
+    } else{
+        row += 1;
+    }
+    
+    int potion = rand() % 3 + 1;
+    
+    if(potion == 1){
+        cout << "You have found a Health potion, your health has been increased by 20!" << endl;
+        player.increaseHealth();
+
+    } else if(potion == 2){
+        cout << "You have found a Damage potion, your damage rate has been increased by 20!" << endl;
+        bowDamage += 20;
+        daggerDamage += 20;
+        swordDamage += 20;
+
+    } else{
+        cout << "You have found a Chance potion, your chace rate has been increased by 15!" << endl;
+        bowPercent += 15;
+        daggerPercent += 15;
+        swordPercent += 15;
+    }
+    
+
+
+    
+
 
 }
 
@@ -449,9 +502,9 @@ void playGame(){
     displayGrid(grid);
     
     //Start actual gameplay
-    bool characterAlive = true, check = false, validMove, enemyCheck;
+    bool characterAlive = true, check = false, validMove, enemyCheck, potionCheck;
     
-    string movement;
+    string movement, potionType;
     int mobsLeft = 8;
     
     while(characterAlive == true){
@@ -475,6 +528,13 @@ void playGame(){
                 //Check to see if there's an enemy in the new grid position
                 enemyCheck = checkEnemy(movement, player, grid);
                 
+                potionCheck = checkPotion(movement, player, grid);
+                
+                if(potionCheck == true){
+                    potionAction(grid, player, movement);
+                }
+                
+                
                 //Check for enemy
                 if(enemyCheck == true){
                     
@@ -496,7 +556,7 @@ void playGame(){
                 
                 if(mobsLeft < 7){
                     int chanceOfPotion = rand() % 100 + 1;
-                    if(chanceOfPotion <= 40){
+                    if(chanceOfPotion <= 30){
                         placePotion(grid);
                     }
                 }
