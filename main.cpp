@@ -10,6 +10,7 @@
 #include "character.h"
 #include "mob.h"
 #include <vector>
+#include <fstream>
 
 using namespace std;
 
@@ -34,13 +35,13 @@ const int cols = 8;
 const int numberOfMobs = 8;
 
 const int daggerDamage = 40;
-const int daggerPercent = 20;
+const int daggerPercent = 30;
 
 const int bowDamage = 30;
-const int bowPercent = 30;
+const int bowPercent = 50;
 
 const int swordDamage = 20;
-const int swordPercent = 50;
+const int swordPercent = 70;
 
 
 
@@ -218,7 +219,7 @@ bool checkEnemy(string movement, Character player, string grid[rows][cols]){
 string chooseWeapon(){
     
     //Menu for choosing the weapon
-    cout << "Please Choose your Weapon" << endl;
+    cout << "\nPlease Choose your Weapon" << endl;
     cout << "1 - Dagger. Chance: " << daggerPercent << "% Damage: " << daggerDamage << " HP" << endl;
     cout << "2 - Bow. Chance: " << bowPercent << "% Damage: " << bowDamage << " HP" << endl;
     cout << "3 - Sword. Chance: " << swordPercent << "% Damage: " << swordDamage << " HP" << endl;
@@ -255,11 +256,11 @@ void dealDamageToMob(int damage, int percent, string weapon, Mob& mob){
     //If the percentage of hit probability is less than the random number then a hit has been successful
     if(randomNumber <= percent){
         if(weapon == "Sword"){
-            cout << "You swing your sword and successfully strike the Goblin!" << endl << endl;
+            cout << "\nYou swing your sword and successfully strike the Goblin!" << endl << endl;
         } else if(weapon == "Bow"){
-            cout << "You fire an arrow at the Goblin and successfully hit it!" << endl << endl;
+            cout << "\nYou fire an arrow at the Goblin and successfully hit it!" << endl << endl;
         } else{
-            cout << "You successfully stab the Goblin!" << endl << endl;
+            cout << "\nYou successfully stab the Goblin!" << endl << endl;
         }
         
         //reduce the health of the mob being attacked
@@ -269,11 +270,11 @@ void dealDamageToMob(int damage, int percent, string weapon, Mob& mob){
     } else{
         //Else if they miss the Mob
         if(weapon == "Sword"){
-            cout << "You swing your sword but the Goblin dodges it!" << endl << endl;
+            cout << "\nYou swing your sword but the Goblin dodges it!" << endl << endl;
         } else if(weapon == "Bow"){
-            cout << "You fire an arrow but miss!" << endl << endl;
+            cout << "\nYou fire an arrow but miss!" << endl << endl;
         } else{
-            cout << "The Goblin avoids your dagger!" << endl << endl;
+            cout << "\nThe Goblin avoids your dagger!" << endl << endl;
         }
     }
     
@@ -289,7 +290,7 @@ bool battle(Character& player, string grid[rows][cols], Mob& mob){
     while(mob.getHealthPoints() > 0 || player.getHealthPoints() > 0){
         
         //output the HP points of the mob being attacked
-        cout << "Mob Health: " << mob.getHealthPoints() << endl;
+        cout << "\nMob Health: " << mob.getHealthPoints() << endl ;
         cout << "Your Health: " << player.getHealthPoints() << endl;
         
         //Choose the weapon to use
@@ -304,20 +305,23 @@ bool battle(Character& player, string grid[rows][cols], Mob& mob){
             dealDamageToMob(swordDamage, swordPercent, weapon, mob);
         }
         
+        //Check to see if mob has died yet
         if(mob.getHealthPoints() <= 0){
-            //output the HP points of the mob being attacked
-            cout << "Mob Health: " << mob.getHealthPoints() << endl;
-            cout << "Your Health: " << player.getHealthPoints() << endl << endl;
-            battleWon = true;
+                battleWon = true;
             break;
         }
+        
         
         int randomNumber = mob.getDamage();
         //Mob attacks the player with a random 0 to 15 damage rate
         cout << "The Goblin attacks you and hits you!" << endl;
         player.reduceHealthPoints(randomNumber);
         
-        
+        //Check to see if the player has died
+        if(player.getHealthPoints() <= 0){
+            break;
+        }
+
     }
     
     return battleWon;
@@ -332,6 +336,7 @@ Mob checkMob(Mob (&mobs)[numberOfMobs], string grid[rows][cols], Character& play
     
     int check = 0;
     
+    //Add 1 onto coordinates as the player hasn't actually occupied this spot yet
     if(movement == "L"){
         col -= 1;
     } else if(movement == "R"){
@@ -349,7 +354,25 @@ Mob checkMob(Mob (&mobs)[numberOfMobs], string grid[rows][cols], Character& play
         }
     }
     
+    //Return the mob in question from the array
     return mobs[check];
+}
+
+void saveGame(string grid[rows][cols]){
+    
+    ofstream saveFile;
+    
+    saveFile.open("Fantasy Wars - Saved Game.txt", ios::out);
+    
+    for(int row = 0; row < rows; row++){
+        for(int col = 0; col < cols; col++){
+            saveFile << grid[row][col] << "";
+        }
+        saveFile << "\n";
+    }
+    
+    
+    
 }
 
 
@@ -421,6 +444,7 @@ void playGame(){
                     //do actual battling
                     bool battleWon = battle(player, grid, whichMob);
                     
+                    
                     if(battleWon == true){
                         cout << "You kill the Goblin!" << endl;
                     } else{
@@ -432,6 +456,8 @@ void playGame(){
                 moveCharacter(movement, player, grid);
                
                 displayGrid(grid);
+                
+                saveGame(grid);
                 
             }
             
