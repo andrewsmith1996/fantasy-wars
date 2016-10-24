@@ -315,7 +315,7 @@ bool battle(Character& player, string grid[rows][cols], Mob& mob){
         //Check to see if mob has died yet
         if(mob.getHealthPoints() <= 0){
                 battleWon = true;
-            break;
+                break;
         }
         
         
@@ -382,6 +382,41 @@ void saveGame(string grid[rows][cols]){
     
 }
 
+void placePotion(string grid[rows][cols]){
+    
+    int randRow = rand() % rows;
+    int randCol = rand() % cols;
+    
+    int whichPotion = rand() % 2;
+    string potionSymbol;
+    
+    switch(whichPotion){
+        case 0:
+            //Health Potion
+            potionSymbol = " ! ";
+            break;
+        case 1:
+            //Damage Potion
+            potionSymbol = " ? ";
+            break;
+        case 2:
+            //Percent Potion
+            potionSymbol = " * ";
+            break;
+        default:
+            potionSymbol = "ERROR";
+            cout << "Error selecting Potion - Please restart Fantasy Wars";
+    }
+  
+    if(grid[randRow][randCol] == " - "){
+        grid[randRow][randCol] = potionSymbol;
+        cout << "\nA Magical Potion has appeared!" << endl;
+    } else{
+        placePotion(grid);
+    }
+
+}
+
 
 
 void playGame(){
@@ -402,7 +437,6 @@ void playGame(){
         addMob(grid, mobs[x]);
     }
     
-    
     //Create character
     Character player;
     
@@ -415,16 +449,15 @@ void playGame(){
     displayGrid(grid);
     
     //Start actual gameplay
-    bool characterAlive = true;
+    bool characterAlive = true, check = false, validMove, enemyCheck;
     
     string movement;
-    bool check = false;
-    bool validMove;
-    bool enemyCheck;
+    int mobsLeft = 8;
     
     while(characterAlive == true){
         
         do{
+            
             cout << "Move Left (L), Forward (F), Backward (B), Right (R)" << endl << endl;;
             cin >> movement;
             
@@ -454,17 +487,27 @@ void playGame(){
                     
                     if(battleWon == true){
                         cout << "You kill the Goblin!" << endl;
+                        mobsLeft--;
                     } else{
                         cout << "GAME OVER! You have died!" << endl;
                         characterAlive = false;
                     }
                 }
                 
+                if(mobsLeft < 7){
+                    int chanceOfPotion = rand() % 100 + 1;
+                    if(chanceOfPotion <= 40){
+                        placePotion(grid);
+                    }
+                }
+                
+                
                 moveCharacter(movement, player, grid);
                
                 displayGrid(grid);
                 
                 saveGame(grid);
+                
                 
             }
             
