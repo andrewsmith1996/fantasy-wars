@@ -86,20 +86,27 @@ string createGrid(string grid[rows][cols]){
 }
 
 void displayGrid(string grid[rows][cols]){
-    
+    cout << "        THE REALM        " << endl;
+    cout << " ________________________" << endl;
+
     //Function that displays the grid row by row
     for (int row = 0; row < rows; row++)
     {
+        cout << "|";
+        
         for (int col = 0; col < cols; col++)
         {
             //output the rows
             cout << grid[row][col];
         }
         //output a new line
-        cout << endl;
+        cout << "|" << endl;
         
     }
 
+    cout << " ------------------------" << endl;
+
+    
 }
 
 void addMob(string grid[rows][cols], Mob& enemy){
@@ -314,7 +321,7 @@ bool battle(Character& player, string grid[rows][cols], Mob& mob){
         
         int randomNumber = mob.getDamage();
         //Mob attacks the player with a random 0 to 15 damage rate
-        cout << "The Goblin attacks you and hits you!" << endl;
+        cout << "The Goblin attacks you and hits you!\n" << endl;
         player.reduceHealthPoints(randomNumber);
         
         //Check to see if the player has died
