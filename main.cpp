@@ -24,14 +24,14 @@ void playGame();
 char createGrid(string);
 void displayGrid(string);
 string AddMob(string, Mob);
-void placeCharacter(string, Character);
-void moveCharacter(string, Character, string);
-bool checkMove(string, Character, string);
-bool checkEnemey(string, Character, string);
-bool battle(Character, string, Mob);
+void placeCharacter(string, Character*);
+void moveCharacter(string, Character*, string);
+bool checkMove(string, Character*, string);
+bool checkEnemey(string, Character*, string);
+bool battle(Character*, string, Mob);
 string chooseWeapon();
 void dealDamageToMob(int, int, string, Mob&);
-Mob checkMob(Mob, string, Character, string);
+Mob checkMob(Mob, string, Character*, string);
 
 //Global Variables
 const int rows = 20;
@@ -131,19 +131,19 @@ void addMob(string grid[rows][cols], Mob& enemy){
 }
 
 
-void placeCharacter(string grid[rows][cols], Character& player){
+void placeCharacter(string grid[rows][cols], Character *player){
    
     //Place the player on the grid
-    player.setRowPos(rows - 1);
-    player.setColPos((cols - 1) / 2);
+    player->setRowPos(rows - 1);
+    player->setColPos((cols - 1) / 2);
     
     //Place the symbol of the player
-    grid[player.getRowPos()][player.getColPos()] = " K ";
+    grid[player->getRowPos()][player->getColPos()] = " K ";
     
 
 }
 
-bool checkMove(string movement, Character& player, string grid[rows][cols]){
+bool checkMove(string movement, Character* player, string grid[rows][cols]){
  
     bool validMove = true;
   
@@ -152,22 +152,22 @@ bool checkMove(string movement, Character& player, string grid[rows][cols]){
     
         //Checks the movement and sees if the movement would be out of the grid
         if(movement == "L"){
-            int boundry = player.getColPos() - 1;
+            int boundry = player->getColPos() - 1;
             if(boundry < 0){
                 validMove = false;
             }
         } else if(movement == "R"){
-            int boundry = player.getColPos() + 1;
+            int boundry = player->getColPos() + 1;
             if(boundry > (cols - 1)){
                 validMove = false;
             }
         } else if(movement == "B"){
-            int boundry = player.getRowPos() + 1;
+            int boundry = player->getRowPos() + 1;
             if(boundry > (rows - 1)){
                 validMove = false;
             }
         } else if(movement == "F"){
-            int boundry = player.getRowPos() - 1;
+            int boundry = player->getRowPos() - 1;
             if(boundry < 0){
                 validMove = false;
             }
@@ -182,47 +182,47 @@ bool checkMove(string movement, Character& player, string grid[rows][cols]){
 
 }
 
-void moveCharacter(string movement, Character& player, string grid[rows][cols]){
+void moveCharacter(string movement, Character* player, string grid[rows][cols]){
     
     //Reset the board
-    grid[player.getRowPos()][player.getColPos()] = " - ";
+    grid[player->getRowPos()][player->getColPos()] = " - ";
 
     //Checks the movement and then sets the new space for the character
     if(movement == "L"){
-            grid[player.getRowPos()][player.getColPos() - 1] = " K ";
-            player.setColPos(player.getColPos() - 1);
+            grid[player->getRowPos()][player->getColPos() - 1] = " K ";
+            player->setColPos(player->getColPos() - 1);
     } else if(movement == "R"){
-            grid[player.getRowPos()][player.getColPos() + 1] = " K ";
-            player.setColPos(player.getColPos() + 1);
+            grid[player->getRowPos()][player->getColPos() + 1] = " K ";
+            player->setColPos(player->getColPos() + 1);
     } else if(movement == "B"){
-            grid[player.getRowPos() + 1][player.getColPos()] = " K ";
-            player.setRowPos(player.getRowPos() + 1);
+            grid[player->getRowPos() + 1][player->getColPos()] = " K ";
+            player->setRowPos(player->getRowPos() + 1);
     } else if(movement == "F"){
-            grid[player.getRowPos() - 1][player.getColPos()] = " K ";
-            player.setRowPos(player.getRowPos() - 1);
+            grid[player->getRowPos() - 1][player->getColPos()] = " K ";
+            player->setRowPos(player->getRowPos() - 1);
 
     }
     
 }
 
-bool checkEnemy(string movement, Character player, string grid[rows][cols]){
+bool checkEnemy(string movement, Character* player, string grid[rows][cols]){
     bool enemy = false;
     
     //Checks the movement and if the new movement position is an enemy or not
     if(movement == "L"){
-        if(grid[player.getRowPos()][player.getColPos() - 1] == " 0 "){
+        if(grid[player->getRowPos()][player->getColPos() - 1] == " 0 "){
             enemy = true;
         }
     } else if(movement == "R"){
-        if(grid[player.getRowPos()][player.getColPos() + 1] == " 0 "){
+        if(grid[player->getRowPos()][player->getColPos() + 1] == " 0 "){
             enemy = true;
         }
     } else if(movement == "F"){
-        if(grid[player.getRowPos() - 1][player.getColPos()] == " 0 "){
+        if(grid[player->getRowPos() - 1][player->getColPos()] == " 0 "){
             enemy = true;
         }
     } else if(movement == "B"){
-        if(grid[player.getRowPos() + 1][player.getColPos()] == " 0 "){
+        if(grid[player->getRowPos() + 1][player->getColPos()] == " 0 "){
             enemy = true;
         }
     }
@@ -296,17 +296,17 @@ void dealDamageToMob(int damage, int percent, string weapon, Mob& mob){
     
 }
 
-bool battle(Character& player, string grid[rows][cols], Mob& mob){
+bool battle(Character* player, string grid[rows][cols], Mob& mob){
     bool battleWon;
     
     battleWon = false;
     
     //while the mob is still alive the battle continues
-    while(mob.getHealthPoints() > 0 || player.getHealthPoints() > 0){
+    while(mob.getHealthPoints() > 0 || player->getHealthPoints() > 0){
         
         //output the HP points of the mob being attacked
         cout << "\nMob Health: " << mob.getHealthPoints() << endl ;
-        cout << "Your Health: " << player.getHealthPoints() << endl;
+        cout << "Your Health: " << player->getHealthPoints() << endl;
         
         //Choose the weapon to use
         string weapon = chooseWeapon();
@@ -335,12 +335,12 @@ bool battle(Character& player, string grid[rows][cols], Mob& mob){
         } else{
             //Mob attacks the player with a random 0 to 15 damage rate
             cout << "The Goblin attacks you and hits you!\n" << endl;
-            player.reduceHealthPoints(mobAttackDamage);
+            player->reduceHealthPoints(mobAttackDamage);
 
         }
         
         //Check to see if the player has died
-        if(player.getHealthPoints() <= 0){
+        if(player->getHealthPoints() <= 0){
             break;
         }
 
@@ -350,11 +350,11 @@ bool battle(Character& player, string grid[rows][cols], Mob& mob){
 
 }
 
-Mob checkMob(Mob (&mobs)[numberOfMobs], string grid[rows][cols], Character& player, string movement){
+Mob checkMob(Mob (&mobs)[numberOfMobs], string grid[rows][cols], Character* player, string movement){
     
     //gets the current position on the grid of the player
-    int row = player.getRowPos();
-    int col = player.getColPos();
+    int row = player->getRowPos();
+    int col = player->getColPos();
     
     int check = 0;
     
@@ -418,24 +418,24 @@ void placePotion(string grid[rows][cols]){
 }
 
 
-bool checkPotion(string movement, Character player, string grid[rows][cols]){
+bool checkPotion(string movement, Character* player, string grid[rows][cols]){
     bool potion = false;
     
     //Checks the movement and if the new movement position is an enemy or not
     if(movement == "L"){
-        if(grid[player.getRowPos()][player.getColPos() - 1] == " ? "){
+        if(grid[player->getRowPos()][player->getColPos() - 1] == " ? "){
             potion = true;
         }
     } else if(movement == "R"){
-        if(grid[player.getRowPos()][player.getColPos() + 1] == " ? "){
+        if(grid[player->getRowPos()][player->getColPos() + 1] == " ? "){
             potion = true;
         }
     } else if(movement == "F"){
-        if(grid[player.getRowPos() - 1][player.getColPos()] == " ? "){
+        if(grid[player->getRowPos() - 1][player->getColPos()] == " ? "){
             potion = true;
         }
     } else if(movement == "B"){
-        if(grid[player.getRowPos() + 1][player.getColPos()] == " ? "){
+        if(grid[player->getRowPos() + 1][player->getColPos()] == " ? "){
             potion = true;
         }
     }
@@ -444,11 +444,11 @@ bool checkPotion(string movement, Character player, string grid[rows][cols]){
     
 }
 
-void potionAction(string grid[rows][cols], Character& player, string movement){
+void potionAction(string grid[rows][cols], Character* player, string movement){
     
     //gets the current position on the grid of the player
-    int row = player.getRowPos();
-    int col = player.getColPos();
+    int row = player->getRowPos();
+    int col = player->getColPos();
     
     //Add 1 onto coordinates as the player hasn't actually occupied this spot yet
     if(movement == "L"){
@@ -467,7 +467,7 @@ void potionAction(string grid[rows][cols], Character& player, string movement){
     if(potion == 1){
         //If a health potion
         cout << "You have found a Health potion, your health has been increased by 20!" << endl;
-        player.increaseHealth();
+        player->increaseHealth();
 
     } else if(potion == 2){
         //If a damage potion
@@ -519,9 +519,9 @@ void playGame(){
     }
     
     //Create character
-    Character player;
+    Character* player = new Character;
     
-    player.setInitialHealth();
+    player->setInitialHealth();
     
     //Put character on screen
     placeCharacter(grid, player);
@@ -580,6 +580,8 @@ void playGame(){
                         mobsLeft--;
                     } else{
                         cout << "GAME OVER! You have died!" << endl;
+                        delete player;
+                        
                         cout << "You killed " << numberOfMobs - mobsLeft << " Goblins" << endl;
                         characterAlive = false;
                         break;
